@@ -15,5 +15,6 @@ module.exports.testIt = (actualOutput, expectedOutput) => {
     console.error('acutualOutput does not equal expectedOutput');
     return false;
   }
+  console.log(`test passed. ${actualOutput} equals ${expectedOutput}`)
   return true;
 }
