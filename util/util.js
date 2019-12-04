@@ -1,20 +1,39 @@
+const fs = require('fs');
+const fsp = fs.promises;
+
 
 module.exports.testIt = (actualOutput, expectedOutput) => {
+  let isFailed = false;
+  let failMessage = '';
   if (typeof actualOutput !== typeof expectedOutput) {
-    console.log(`${actualOutput} type does not match ${expectedOutput} type`);
-    console.error('actualOutput and expectedOutput types do not match');
-    return false;
+    isFailed = true;
+    failMessage = (`${actualOutput} and ${expectedOutput} types do not match`);
   }
   if (actualOutput.length !== expectedOutput.length) {
-    console.log(`${actualOutput.length} length does not match ${expectedOutput.length} length`);
-    console.error('actualOutput and expectedOutput lengths do not match');
-    return false;
+    isFailed = true;
+    failMessage = (`${actualOutput} and ${expectedOutput} lengths do not match`);
   }
   if (actualOutput != expectedOutput) {
-    console.log(`${actualOutput} does not equal ${expectedOutput}`);
-    console.error('acutualOutput does not equal expectedOutput');
-    return false;
+    isFailed = true;
+    failMessage = (`${actualOutput} does not equal ${expectedOutput}`);
   }
-  console.log(`test passed. ${actualOutput} equals ${expectedOutput}`)
-  return true;
+
+  if (isFailed) {
+    console.error(`test failed. ${failMessage}`);
+    return false;
+  } else {
+    console.log(`test passed. ${actualOutput} equals ${expectedOutput}`)
+    return true;
+  }
 }
+
+
+module.exports.loadInput = (filename) => {
+  return fsp.readFile(filename, { encoding: 'utf-8' })
+    .then((input) => {
+      return input
+        .split('\n')
+        .filter((i) => (i !== ''))
+        .map((line) => line.split(','));
+    })
+  }
